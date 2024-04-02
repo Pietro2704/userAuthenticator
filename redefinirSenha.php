@@ -2,6 +2,19 @@
 require_once "conexao.php";
 require_once "comandos_SQL.php";
 require_once "api.php";
+
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    
+    header('Location: login.php');
+    exit();
+
+}
+
+$user_id = $_SESSION['user_id'];
+$usuarioLogado = buscarUsuario($user_id);
+
 ?>
 
 <!DOCTYPE html>
@@ -13,31 +26,21 @@ require_once "api.php";
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <title>Cadastro</title>
+    <title>Redefinir Senha</title>
 </head>
 <body>
   <div class= "container">
     <div class= "row justify-content-center">
 
       <div class= "col-md-6">
-        <h1 class= "mt-5 mb-2">Cadastrar</h1>
+        <h1 class= "mt-5 mb-2">Alteração de senha:</h1>
         <div class="relogio"  >
           <div id="hora" class= "mb-4"><?php echo obterHoraAtual(); ?></div>
         </div>
-        <form action= "index.php" method=POST>
+        <form action="redefinirSenha.php" method=POST>
 
-          <div class= "form-group">
-            <label for="username">Nome</label>
-            <input type= "text" class="form-control" name="newusername" id='username'required> 
-          </div>
-
-          <div class= "form-group">
-            <label for="email">E-mail</label>
-            <input type= "email" class="form-control" name="email" id='email' required> 
-          </div>
-
-          <div class="form-group">
-            <label for="password">senha</label>
+        <div class="form-group">
+            <label for="password">Nova Senha</label>
             <input type= "password" class="form-control" name="newpassword" id= "password" minlength="8" required> 
           </div>
 
@@ -46,10 +49,9 @@ require_once "api.php";
             <input type="password" class="form-control" name="confirm_password" id="confirm_password" required>
           </div>
 
-          <button type="submit" name="submit" class="btn btn-primary mb-2 form-control">Cadastrar</button>
+          <button type="submit" name="submit" class="btn btn-primary mb-2 form-control">Confirmar</button>
           
         </form>
-        <a href="login.php">Já possui conta?</a>
       </div>
     </div>
   </div>
@@ -58,10 +60,12 @@ require_once "api.php";
 
 <?php
 
+
+
+
 if(isset($_POST["submit"])){
 
-  $newusername = $_POST ["newusername"];
-  $email = $_POST["email"];
+  $usuario_id = $usuarioLogado['id'];
 
   $newpassword = $_POST ["newpassword"];
   $confirm_password = $_POST["confirm_password"];
@@ -72,9 +76,8 @@ if(isset($_POST["submit"])){
     exit();
 
   }
-  
-  criarUsuario($newusername, $newpassword, $email);
+
+  redefinirSenha($newpassword,$usuario_id);
 
 }
-
 ?>

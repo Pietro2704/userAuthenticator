@@ -9,11 +9,12 @@ if (isset($_GET['id'])) {
     if (!$usuario) {
 
       die("usuario inexistente");
-        
+          
     }else{
-
-      excluirUsuario($id);
-      echo "<script>window.location = 'adm.php';</script>"; 
+        
+      session_start();
+      session_destroy();
+      echo "<script>window.location = 'login.php';</script>";
 
     }
 }
